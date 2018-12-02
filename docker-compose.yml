@@ -1,0 +1,50 @@
+version: '3'
+volumes: 
+  config:
+networks: 
+  localhost:
+services: 
+  config:
+    container_name: config-server
+    build: config-server
+    ports: 
+      - 9080:9080
+    networks: 
+      - localhost
+      
+  discovery:
+    container_name: discovery 
+    build: discovery
+    ports:
+      - 1111:1111
+    networks: 
+      - localhost
+    depends_on: 
+      - config
+
+  greeting:
+    container_name: greeting
+    build: greeting
+    #ports:
+    #  - 2222:2222
+    networks: 
+      - localhost
+    depends_on: 
+      - config
+      - discovery
+    links: 
+      - discovery:discovery
+      - config:config
+
+  zuul:
+    container_name: zuul 
+    build: zuul
+    ports:
+      - 8080:8080
+    networks: 
+      - localhost
+    depends_on: 
+      - discovery
+    links: 
+      - discovery:discovery
+      - config:config
