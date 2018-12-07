@@ -1,0 +1,37 @@
+spring:
+ application:
+  name: my-zuul
+  
+server:
+  port: 9070
+
+eureka:
+  instance:
+    hostname: localhost
+    port: 9090
+  client:
+    registerWithEureka: true
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://localhost:9090/eureka/
+  server:
+    wait-time-in-ms-when-sync-empty: 3000
+    
+zuul:
+  routes:
+    product:
+      path: /product/**
+      serviceId: http://localhost:9098
+      stripPrefix: false
+    customer:
+      path: /customer/**
+      serviceId: http://localhost:9097
+      stripPrefix: false
+    sale:
+      path: /sale/**
+      serviceId: http://localhost:9099
+      stripPrefix: false
+    register:
+      path: /register/**
+      serviceId: http://localhost:7070
+      stripPrefix: false
